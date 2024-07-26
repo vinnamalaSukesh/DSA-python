@@ -8,13 +8,17 @@ for edge in edges:
     L[edge[0]] += [edge[1]]
 
 def has_path_DFS(src,des):
-    if(src == des):
-        return True
-    else:
-        ans = False
-    for i in L[src]:
-        ans = ans or has_path_DFS(i,des)
-    return ans
+    visited = set()
+    stack = [src]
+    while stack:
+        current_node = stack.pop()
+        if current_node == des:
+            return True
+        visited.add(current_node)
+        for neighbor in L[current_node]:
+            if neighbor not in visited:
+                stack.append(neighbor)
+    return False
 
 def has_path_BFS(src, des):
     visited = set()
