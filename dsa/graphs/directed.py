@@ -6,7 +6,7 @@ for edge in edges:
     if(edge[1] not in L.keys()):
         L[edge[1]] = []
     L[edge[0]] += [edge[1]]
-
+print(L)
 def has_path_DFS(src,des):
     visited = set()
     stack = [src]

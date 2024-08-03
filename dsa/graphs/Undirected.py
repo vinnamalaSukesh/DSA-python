@@ -7,7 +7,34 @@ for edge in edges:
         L[edge[1]] = []
     L[edge[0]] += [edge[1]]
     L[edge[1]] += [edge[0]]
-print(L)
+
+def has_path_DFS(src,des):
+    visited = set()
+    stack = [src]
+    while stack:
+        current_node = stack.pop()
+        if current_node == des:
+            return True
+        visited.add(current_node)
+        for neighbor in L[current_node]:
+            if neighbor not in visited:
+                stack.append(neighbor)
+    return False
+
+def has_path_BFS(src, des):
+    visited = set()
+    queue = [src]
+    while queue:
+        current_node = queue.pop(0)
+        if current_node == des:
+            return True
+        visited.add(current_node)
+        for neighbor in L[current_node]:
+            if neighbor not in visited:
+                queue.append(neighbor)
+    return False
+#print(has_path_DFS('1','8'))
+#print(has_path_BFS('1','8'))
 
 
 
