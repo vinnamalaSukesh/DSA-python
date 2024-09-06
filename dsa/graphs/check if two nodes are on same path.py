@@ -38,5 +38,4 @@ def check(node1,node2):
         print('two nodes in same path')
     else:
         print('two nodes in different path')
-
 check('6','7')

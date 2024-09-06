@@ -39,97 +39,107 @@ def cal_height(node):
     return node.height if node else 0
 
 def left_left(node):
+    print('left left',node.data)
     t1 = node
     t2 = t1.right
-    #t3 = t2.right
     t1.right = t2.left
+    if t2.left:
+        t2.left.parent = t1
     t2.left = t1
     t2.parent = t1.parent
+    if t1.parent is None:
+        global root
+        root = t2
+    elif t1 == t1.parent.left:
+        t1.parent.left = t2
+    else:
+        t1.parent.right = t2
     t1.parent = t2
-
-    t1.height = max(cal_height(t1.left),cal_height(t1.right)) + 1
-    t2.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
+    t1.height = 1 + max(cal_height(t1.left), cal_height(t1.right))
+    t2.height = 1 + max(cal_height(t2.left), cal_height(t2.right))
 
 def right_right(node):
+    print('right right',node.data)
     t1 = node
     t2 = t1.left
-    #t3 = t2.left
     t1.left = t2.right
+    if t2.right:
+        t2.right.parent = t1
     t2.right = t1
     t2.parent = t1.parent
+    if t1.parent is None:
+        global root
+        root = t2
+    elif t1 == t1.parent.left:
+        t1.parent.left = t2
+    else:
+        t1.parent.right = t2
     t1.parent = t2
-    t1.height = max(cal_height(t1.left),cal_height(t1.right)) + 1
-    t2.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
+    t1.height = 1 + max(cal_height(t1.left), cal_height(t1.right))
+    t2.height = 1 + max(cal_height(t2.left), cal_height(t2.right))
 
 def left_right(node):
-    t1 = node
-    t2 = t1.left
-    t3 = t2.right
-
-    t1.left = t3
-    t2.right = t3.left
-    t3.left = t2
-
-    t3.parent = t2.parent
-    t2.parent = t3
-    if(t2.right):
-        t2.right.parent = t2
-    t2.height = max(cal_height(t1.left),cal_height(t1.right)) + 1
-    t3.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-    t1.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-
-    t1.left = t3.right
-    t3.right = t1
-    t3.parent = t1.parent
-    if(t1.left):
-        t1.left.parent = t1
-    t2.height = max(cal_height(t1.left),cal_height(t1.right)) + 1
-    t3.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-    t1.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-
-def right_left(node):
+    #left
+    print('left right',node.data)
     t1 = node
     t2 = t1.right
     t3 = t2.left
-
-    t1.right = t3
     t2.left = t3.right
+    if t3.right:
+        t3.right.parent = t2
     t3.right = t2
-
-    t3.parent = t2.parent
-    t2.parent = t3
-    if(t2.left):
-        t2.left.parent = t2
-    t2.height = max(cal_height(t1.left),cal_height(t1.right)) + 1
-    t3.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-    t1.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-
-    t1.right = t3.left
-    t3.left = t1
-    t3.parent = t1.parent
-    if(t1.right):
-        t1.right.parent = t1
-    t2.height = max(cal_height(t1.left),cal_height(t1.right)) + 1
-    t3.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-    t1.height = max(cal_height(t2.left),cal_height(t2.right)) + 1
-
-def check_balance(t):
-  if not t:
-    return 0  # Handle empty tree case
-  lh = check_balance(t.left)
-  rh = check_balance(t.right)
-  if abs(lh - rh) > 1:
-    if lh > rh:
-      if t.left.left:
-        right_right(t)
-      else:
-        left_right(t)
+    t1.right = t3
+    t2.height = 1 + max(cal_height(t2.left), cal_height(t2.right))
+    t3.height = 1 + max(cal_height(t3.left), cal_height(t3.right))
+    #right
+    t3,t2 = t2,t3
+    t1 = node
+    t2 = t1.left
+    t1.left = t2.right
+    if t2.right:
+        t2.right.parent = t1
+    t2.right = t1
+    t2.parent = t1.parent
+    if t1.parent is None:
+        global root
+        root = t2
+    elif t1 == t1.parent.left:
+        t1.parent.left = t2
     else:
-      if t.right.right:
-        left_left(t)
-      else:
-        right_left(t)
-  return max(lh, rh) + 1
+        t1.parent.right = t2
+    t1.parent = t2
+    t1.height = 1 + max(cal_height(t1.left), cal_height(t1.right))
+    t2.height = 1 + max(cal_height(t2.left), cal_height(t2.right))
+    print_tree(root)
+    exit()
+
+def right_left(node):
+    pass
+
+def check_balance(node):
+    if not node:
+        return 0  # Handle empty tree case
+
+    lh = check_balance(node.left)
+    rh = check_balance(node.right)
+
+    # Calculate the balance factor
+    balance_factor = lh - rh
+
+    # Perform rotations if the node is unbalanced
+    if balance_factor > 1:
+        if cal_height(node.left.left) >= cal_height(node.left.right):
+            right_right(node)  # Left Left Case
+        else:
+            left_right(node)  # Left Right Case
+    elif balance_factor < -1:
+        if cal_height(node.right.right) >= cal_height(node.right.left):
+            left_left(node)  # Right Right Case
+        else:
+            right_left(node)  # Right Left Case
+
+    return max(lh, rh) + 1
+
 
 def elements(node,L):
     if(node.left):
@@ -139,12 +149,12 @@ def elements(node,L):
     L.append(node.data)
     return L[:-1]
 
-def print_tree(self):
-    if self.left:
-        print_tree(self.left)
-    print(self.data,self.height)
-    if self.right:
-        print_tree(self.right)
+def print_tree(node):
+    if node == None:
+       return
+    print_tree(node.left)
+    print(node.data,node.height)
+    print_tree(node.right)
 
 root = None
 add(5)
